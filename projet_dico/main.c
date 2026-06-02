@@ -1,5 +1,5 @@
 /* wc - count lines, words and characters	Author: David Messer */
-
+//test
 #include <stdio.h>
 #include <stdlib.h>
 #define isspace(c) (c==' ' || c=='\t' || c=='\n' || c=='\f' || c=='\r')
