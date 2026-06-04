@@ -27,6 +27,8 @@ void count(FILE* f)
   while ((c = getc(f)) != EOF) {
 	ccount++;
 
+ // j'aime pas trop l'anglais 
+
 	if (isspace(c)) {
 		if (word) wcount++;
 		word = 0;
