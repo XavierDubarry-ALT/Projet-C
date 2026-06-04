@@ -1,5 +1,5 @@
 /* wc - count lines, words and characters	Author: David Messer */
-//test
+//test teu
 #include <stdio.h>
 #include <stdlib.h>
 #include "wc.h"

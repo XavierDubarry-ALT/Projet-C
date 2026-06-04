@@ -2,13 +2,13 @@
 #include <stdlib.h>
 #define isspace(c) (c==' ' || c=='\t' || c=='\n' || c=='\f' || c=='\r')
 
-long lcount;			/* Count of lines */
-long wcount;			/* Count of words */
-long ccount;			/* Count of characters */
+extern long lcount;			/* Count of lines */
+extern long wcount;			/* Count of words */
+extern long ccount;			/* Count of characters */
 
-long ltotal;			/* Total count of lines */
-long wtotal;			/* Total count of words */
-long ctotal;			/* Total count of characters */
+extern long ltotal;			/* Total count of lines */
+extern long wtotal;			/* Total count of words */
+extern long ctotal;			/* Total count of characters */
 
 void count(FILE* f);
 
