@@ -1,49 +1,37 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "wc.h"
 
-#define isspace(c) (c==' ' || c=='\t' || c=='\n' || c=='\f' || c=='\r')
+#define isspace(c) (c == ' ' || c == '\t' || c == '\n' || c == '\f' || c == '\r')
 
-extern long lcount;			/* Count of lines */
-extern long wcount;			/* Count of words */
-extern long ccount;			/* Count of characters */
-
-extern long ltotal;			/* Total count of lines */
-extern long wtotal;			/* Total count of words */
-extern long ctotal;			/* Total count of characters */
-
-void count(FILE* f);
-//test
-//bonjour là je suis en train de travaillé, et je suis en train de modifier cette phrase
-//test Xavier
-void count(FILE* f)
+void count(FILE *f, struct Counting *pcmp)
 {
   register int c;
   register int word = 0;
 
-  lcount = 0;
-  wcount = 0;
-  ccount = 0L;
+  pcmp->lcount = 0;
+  pcmp->wcount = 0;
+  pcmp->ccount = 0L;
 
-  while ((c = getc(f)) != EOF) {
-	ccount++;
+  while ((c = getc(f)) != EOF)
+  {
+    pcmp->ccount++;
 
- // j'aime pas trop l'anglais 
+    if (isspace(c))
+    {
+      if (word)
+        pcmp->wcount++;
+      word = 0;
+    }
+    else
+    {
+      word = 1;
+    }
 
-	if (isspace(c)) {
-		if (word) wcount++;
-		word = 0;
-	} else {
-		word = 1;
-	}
-
-	if (c == '\n' || c == '\f') lcount++;
+    if (c == '\n' || c == '\f')
+      pcmp->lcount++;
   }
-  ltotal += lcount;
-  wtotal += wcount;
-  ctotal += ccount;
+  pcmp->ltotal += pcmp->lcount;
+  pcmp->wtotal += pcmp->wcount;
+  pcmp->ctotal += pcmp->ccount;
 }
-
-//voici une fonction
-//sur 
-//plusieur
-//lignes
