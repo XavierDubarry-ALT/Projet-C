@@ -40,3 +40,8 @@ void count(FILE* f)
   wtotal += wcount;
   ctotal += ccount;
 }
+
+//voici une fonction
+//sur 
+//plusieur
+//lignes
