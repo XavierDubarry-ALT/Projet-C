@@ -14,6 +14,7 @@ extern long ctotal;			/* Total count of characters */
 void count(FILE* f);
 //test
 //bonjour là je suis en train de travaillé
+// pendant que xavier boss je bosse aussi 
 void count(FILE* f)
 {
   register int c;
