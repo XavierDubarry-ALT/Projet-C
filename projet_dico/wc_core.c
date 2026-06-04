@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+
 #define isspace(c) (c==' ' || c=='\t' || c=='\n' || c=='\f' || c=='\r')
 
 long lcount;			/* Count of lines */
@@ -11,7 +12,7 @@ long wtotal;			/* Total count of words */
 long ctotal;			/* Total count of characters */
 
 void count(FILE* f);
-
+//test
 void count(FILE* f)
 {
   register int c;
