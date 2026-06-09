@@ -1,13 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
 #include "wc.h"
-
-#define isspace(c) (c == ' ' || c == '\t' || c == '\n' || c == '\f' || c == '\r')
 
 void count(FILE *f, struct Counting *pcmp)
 {
-  register int c;
-  register int word = 0;
+  int c;
+  int word = 0;
 
   pcmp->lcount = 0;
   pcmp->wcount = 0;
