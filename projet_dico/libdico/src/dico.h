@@ -1,0 +1,33 @@
+typedef struct dict_struct dict_t;
+
+typedef enum {
+    DICT_NOK = 0,
+    DICT_OK,
+    DICT_VALUE_UPDATED,
+    DICT_ERR_NOT_FOUND,
+    DICT_ERR_MALLOC
+} dict_status_t;
+
+
+// This is ridiculously low:
+#define HASH_TABLE_DEFAULT_SIZE 503
+//#define HASH_TABLE_DEFAULT_SIZE 100003
+
+
+size_t dict_len(const dict_t* dict);
+
+dict_t* dict_create(void);
+
+uint64_t now_us(void);
+
+dict_status_t dict_contains(const dict_t* dict, const void* key, size_t key_len);
+
+void dict_destroy(dict_t* dict);
+
+char** load_dataset(const char* filename, size_t* out_count);
+
+dict_status_t dict_add(dict_t* dict, void* key, size_t key_len, void* value, size_t value_len);
+
+
+
+
