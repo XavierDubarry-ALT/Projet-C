@@ -1,3 +1,5 @@
+#ifndef DICO_H
+#define DICO_H
 typedef struct dict_struct dict_t;
 
 typedef enum {
@@ -28,6 +30,6 @@ char** load_dataset(const char* filename, size_t* out_count);
 
 dict_status_t dict_add(dict_t* dict, void* key, size_t key_len, void* value, size_t value_len);
 
-
+#endif
 
 
