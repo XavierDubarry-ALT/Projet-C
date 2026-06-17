@@ -7,6 +7,10 @@ struct Counting
     long ltotal; /* Total count of lines */
     long wtotal; /* Total count of words */
     long ctotal; /* Total count of characters */
+
+    int lflag; /* Count lines */
+    int wflag; /* Count words */
+    int cflag; /* Count characters */
 };
 
 void count(FILE *f, struct Counting *pcmp);
