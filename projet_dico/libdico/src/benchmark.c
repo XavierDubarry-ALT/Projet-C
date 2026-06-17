@@ -126,11 +126,11 @@ int main(void)
     dict_status_t suppr = dict_remove_key(dico, "test1", strlen("test1")+1);
     if (suppr == DICT_REMOVE_OK)
     {
-        printf("La clé test1 à été supprimée (status:%d)",suppr);
+        printf("La clé test1 à été supprimée (status:%d) \n",suppr);
     }
     else
     {
-        printf("La clé est introuvable dans le dictionnaire (status:%d)",suppr);
+        printf("La clé est introuvable dans le dictionnaire (status:%d) \n",suppr);
     }
     
 
