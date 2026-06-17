@@ -151,6 +151,8 @@ void dict_destroy(dict_t *dict)
     free(dict);
 }
 
+
+
 dict_status_t internal_dict_equal_key(const dict_entry_t *a, uint32_t hash, const void *raw_key, size_t raw_key_len)
 {
     if (a->hash == hash && a->raw_key_len == raw_key_len && !memcmp(a->raw_key, raw_key, raw_key_len))
@@ -166,7 +168,7 @@ size_t dict_len(const dict_t *dict)
 static dict_entry_t **internal_dict_find_entry_ptr(const dict_t *dict, const void *raw_key,
                                                    size_t raw_key_len, uint32_t hash)
 {
-    dict_entry_t **ptr = &(dict->table[hash % dict->table_len]);
+    dict_entry_t **ptr = &(dict->table[hash & ((dict->table_len)-1)]);
     while (*ptr)
     {
         if (internal_dict_equal_key(*ptr, hash, raw_key, raw_key_len) == DICT_OK)
@@ -261,6 +263,22 @@ dict_status_t dict_add(dict_t *dict, void *key, size_t key_len, void *value, siz
     // Update dict length counter
     dict->key_nb++;
     return DICT_OK;
+}
+
+dict_status_t dict_remove_key(dict_t *dict, const void *key, size_t key_len)
+{
+    uint32_t h = fnv1a_32(key, key_len);
+    dict_entry_t **ptr = internal_dict_find_entry_ptr(dict, key, key_len, h);
+    if (!(*ptr))
+        return DICT_ERR_NOT_FOUND;
+    else
+    {
+        dict_entry_t *to_delete = *ptr;
+        *ptr = to_delete->next;
+        dict_entry_destroy(to_delete);
+        dict->key_nb -= 1;
+        return DICT_REMOVE_OK;
+    }
 }
 
 // ---------------------------------------------------------------------------

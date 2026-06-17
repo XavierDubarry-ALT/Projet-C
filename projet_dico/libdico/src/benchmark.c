@@ -47,6 +47,8 @@ int main(void)
     printf("Total temps : %.3f ms\n", total_insert_ms);
     printf("Moyenne     : %.2f ns / mot\n", ns_per_insert);
 
+
+
     // ---------------------------------------------------------
     // TEST 2 : RECHERCHE (POSITIVE - Cas où ça existe)
     // ---------------------------------------------------------
@@ -120,6 +122,17 @@ int main(void)
     t1 = now_us();
     double ns_per_find = ((double)(t1 - t0) * 1000.0) / 10000000;
     printf("Durée par recherche: %.2f ns / recherche\n", ns_per_find);
+
+    dict_status_t suppr = dict_remove_key(dico, "test1", strlen("test1")+1);
+    if (suppr == DICT_REMOVE_OK)
+    {
+        printf("La clé test1 à été supprimée (status:%d)",suppr);
+    }
+    else
+    {
+        printf("La clé est introuvable dans le dictionnaire (status:%d)",suppr);
+    }
+    
 
     // Nettoyage
     dict_destroy(dico);
