@@ -1,70 +1,59 @@
 /* wc - count lines, words and characters	Author: David Messer */
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include "wc.h"
-
-int lflag; /* Count lines */
-int wflag; /* Count words */
-int cflag; /* Count characters */
 
 void usage(void);
 
 int main(int argc, char *argv[])
 {
-	struct Counting cmp;
+	struct Counting cmp = {0};
 	struct Counting *pcmp = &cmp;
-	int k;
-	char *cp;
-	int tflag, files;
+	int opt;
+	int tflag;
 
-	/* Get flags. */
-	files = argc - 1;
-	k = 1;
-	cp = argv[1];
-	if (argc > 1 && *cp++ == '-')
+	while ((opt = getopt(argc, argv, "lwcS")) != -1)
 	{
-		files--;
-		k++; /* points to first file */
-		while (*cp != 0)
+		switch (opt)
 		{
-			switch (*cp)
-			{
-			case 'l':
-				lflag++;
-				break;
-			case 'w':
-				wflag++;
-				break;
-			case 'c':
-				cflag++;
-				break;
-			default:
-				usage();
-			}
-			cp++;
+		case 'l':
+			cmp.lflag++;
+			break;
+		case 'w':
+			cmp.wflag++;
+			break;
+		case 'c':
+			cmp.cflag++;
+			break;
+		case 'S':
+			//à faire
+			break;
+		default:
+			usage();
 		}
 	}
 
 	/* If no flags are set, treat as wc -lwc. */
-	if (!lflag && !wflag && !cflag)
+	if (!cmp.lflag && !cmp.wflag && !cmp.cflag)
 	{
-		lflag = 1;
-		wflag = 1;
-		cflag = 1;
+		cmp.lflag = 1;
+		cmp.wflag = 1;
+		cmp.cflag = 1;
 	}
 
 	/* Process files. */
-	tflag = files >= 2; /* set if # files > 1 */
+	tflag = (argc - optind) >= 2; /* set if # files > 1 */
 
 	/* Check to see if input comes from std input. */
-	if (k >= argc)
+	if (optind >= argc)
 	{
 		count(stdin, pcmp);
-		if (lflag)
+		if (cmp.lflag)
 			printf(" %6ld", cmp.lcount);
-		if (wflag)
+		if (cmp.wflag)
 			printf(" %6ld", cmp.wcount);
-		if (cflag)
+		if (cmp.cflag)
 			printf(" %6ld", cmp.ccount);
 		printf(" \n");
 		fflush(stdout);
@@ -72,36 +61,36 @@ int main(int argc, char *argv[])
 	}
 
 	/* There is an explicit list of files.  Loop on files. */
-	while (k < argc)
+	while (argv[optind])
 	{
 		FILE *f;
 
-		if ((f = fopen(argv[k], "r")) == (FILE *)NULL)
+		if ((f = fopen(argv[optind], "r")) == (FILE *)NULL)
 		{
-			fprintf(stderr, "wc: cannot open %s\n", argv[k]);
+			fprintf(stderr, "wc: cannot open %s\n", argv[optind]);
 		}
 		else
 		{
 			count(f, pcmp);
-			if (lflag)
+			if (cmp.lflag)
 				printf(" %6ld", cmp.lcount);
-			if (wflag)
+			if (cmp.wflag)
 				printf(" %6ld", cmp.wcount);
-			if (cflag)
+			if (cmp.cflag)
 				printf(" %6ld", cmp.ccount);
-			printf(" %s\n", argv[k]);
+			printf(" %s\n", argv[optind]);
 			fclose(f);
 		}
-		k++;
+		optind++;
 	}
 
 	if (tflag)
 	{
-		if (lflag)
+		if (cmp.lflag)
 			printf(" %6ld", cmp.ltotal);
-		if (wflag)
+		if (cmp.wflag)
 			printf(" %6ld", cmp.wtotal);
-		if (cflag)
+		if (cmp.cflag)
 			printf(" %6ld", cmp.ctotal);
 		printf(" total\n");
 	}
