@@ -214,6 +214,51 @@ static void *internal_helper_copy_or_null(const void *src, size_t len)
         memcpy(dest, src, len);
     return dest;
 }
+static dict_status_t dict_resize(dict_t *dict)
+{
+    //Nouvelle taille = double de l'ancienne
+    size_t new_len = dict->table_len * 2;
+
+    //Alloue un nouveau tableau vide
+    dict_entry_t **new_table = calloc(new_len, sizeof(dict_entry_t *));
+    if (!new_table)
+        return DICT_ERR_MALLOC;
+
+    //Parcourt toute l'ancienne table
+    for (size_t i = 0; i < dict->table_len; i++)
+    {
+        dict_entry_t *cur = dict->table[i];
+        while (cur)
+        {
+            //Sauvegarde le mot suivant avant de modifier cur
+            dict_entry_t *next = cur->next;
+
+            //Calcule le nouvel index dans le nouveau tableau
+            size_t new_index = cur->hash % new_len;
+
+            //Insère cur en tête du nouveau bucket
+            cur->next = new_table[new_index];
+            new_table[new_index] = cur;
+
+            //Avance sur le mot suivant
+            cur = next;
+        }
+    }
+
+    //Libère l'ancien tableau (pas les entrées !)
+    free(dict->table);
+
+    //Met à jour le dictionnaire
+    dict->table = new_table;
+    dict->table_len = new_len;
+
+    return DICT_OK;
+}
+static int dict_needs_resize(const dict_t *dict)
+{
+    return ((double)dict->key_nb / (double)dict->table_len) > 3.0;
+    //consersion double sinon division pas précise
+}
 
 dict_status_t dict_add(dict_t *dict, void *key, size_t key_len, void *value, size_t value_len)
 {
@@ -262,6 +307,12 @@ dict_status_t dict_add(dict_t *dict, void *key, size_t key_len, void *value, siz
 
     // Update dict length counter
     dict->key_nb++;
+
+    if (dict_needs_resize(dict)) {
+        printf("[DEBUG] Facteur de charge > 3.0, resize nécessaire !\n");
+        dict_resize(dict);
+    }
+
     return DICT_OK;
 }
 
