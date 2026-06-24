@@ -85,11 +85,10 @@ struct dict_struct
     size_t key_nb;
 };
 
-struct dict_trier
+typedef struct dict_trier
 {
     void *raw_key;
-    void *value;
-    struct dict_trier *next;
+    int value;
 } dict_trier_t;
 
 // FNV-1a 32 bits
@@ -158,8 +157,6 @@ void dict_destroy(dict_t *dict)
     free(dict);
 }
 
-
-
 dict_status_t internal_dict_equal_key(const dict_entry_t *a, uint32_t hash, const void *raw_key, size_t raw_key_len)
 {
     if (a->hash == hash && a->raw_key_len == raw_key_len && !memcmp(a->raw_key, raw_key, raw_key_len))
@@ -175,7 +172,7 @@ size_t dict_len(const dict_t *dict)
 static dict_entry_t **internal_dict_find_entry_ptr(const dict_t *dict, const void *raw_key,
                                                    size_t raw_key_len, uint32_t hash)
 {
-    dict_entry_t **ptr = &(dict->table[hash & ((dict->table_len)-1)]);
+    dict_entry_t **ptr = &(dict->table[hash & ((dict->table_len) - 1)]);
     while (*ptr)
     {
         if (internal_dict_equal_key(*ptr, hash, raw_key, raw_key_len) == DICT_OK)
@@ -223,39 +220,39 @@ static void *internal_helper_copy_or_null(const void *src, size_t len)
 }
 static dict_status_t dict_resize(dict_t *dict)
 {
-    //Nouvelle taille = double de l'ancienne
+    // Nouvelle taille = double de l'ancienne
     size_t new_len = dict->table_len * 2;
 
-    //Alloue un nouveau tableau vide
+    // Alloue un nouveau tableau vide
     dict_entry_t **new_table = calloc(new_len, sizeof(dict_entry_t *));
     if (!new_table)
         return DICT_ERR_MALLOC;
 
-    //Parcourt toute l'ancienne table
+    // Parcourt toute l'ancienne table
     for (size_t i = 0; i < dict->table_len; i++)
     {
         dict_entry_t *cur = dict->table[i];
         while (cur)
         {
-            //Sauvegarde le mot suivant avant de modifier cur
+            // Sauvegarde le mot suivant avant de modifier cur
             dict_entry_t *next = cur->next;
 
-            //Calcule le nouvel index dans le nouveau tableau
+            // Calcule le nouvel index dans le nouveau tableau
             size_t new_index = cur->hash % new_len;
 
-            //Insère cur en tête du nouveau bucket
+            // Insère cur en tête du nouveau bucket
             cur->next = new_table[new_index];
             new_table[new_index] = cur;
 
-            //Avance sur le mot suivant
+            // Avance sur le mot suivant
             cur = next;
         }
     }
 
-    //Libère l'ancien tableau (pas les entrées !)
+    // Libère l'ancien tableau (pas les entrées !)
     free(dict->table);
 
-    //Met à jour le dictionnaire
+    // Met à jour le dictionnaire
     dict->table = new_table;
     dict->table_len = new_len;
 
@@ -264,7 +261,7 @@ static dict_status_t dict_resize(dict_t *dict)
 static int dict_needs_resize(const dict_t *dict)
 {
     return ((double)dict->key_nb / (double)dict->table_len) > 3.0;
-    //consersion double sinon division pas précise
+    // consersion double sinon division pas précise
 }
 
 dict_status_t dict_add(dict_t *dict, void *key, size_t key_len, void *value, size_t value_len)
@@ -315,7 +312,8 @@ dict_status_t dict_add(dict_t *dict, void *key, size_t key_len, void *value, siz
     // Update dict length counter
     dict->key_nb++;
 
-    if (dict_needs_resize(dict)) {
+    if (dict_needs_resize(dict))
+    {
         printf("[DEBUG] Facteur de charge > 3.0, resize nécessaire !\n");
         dict_resize(dict);
     }
@@ -339,20 +337,39 @@ dict_status_t dict_remove_key(dict_t *dict, const void *key, size_t key_len)
     }
 }
 
+int intComparator ( const void * first, const void * second ) {
+    dict_trier_t firstInt = * (dict_trier_t *) first;
+    dict_trier_t secondInt = * (dict_trier_t *) second;
+    return secondInt.value - firstInt.value;
+}
+
 void dict_dump(dict_t *dict)
 {
-    for (size_t i = 0; i < dict->table_len; i++)
+    size_t dict_length = dict_len(dict);
+    dict_trier_t *tableau = malloc(dict_length * sizeof(dict_trier_t));
+    int i = 0;
+
+    for (size_t k = 0; k < dict->table_len; k++)
     {
-        size_t dict_length  = dict_len(dict);
-        dict_entry_t *cur = dict->table[i];
+
+        dict_entry_t *cur = dict->table[k];
+
         while (cur)
         {
-            
-
-            printf("Clé:%s, Valeur:%d \n",(char*)cur->raw_key, *(int*)cur->value);
+            tableau[i].raw_key = cur->raw_key;
+            tableau[i].value = *(int*)cur->value;
             cur = cur->next;
+            i++;
         }
     }
+    qsort(tableau,dict_length,sizeof(dict_trier_t),intComparator);
+    int j=0;
+    while (j < i)
+    {
+        printf("Clé:%s, Valeur:%d \n", (char*)tableau[j].raw_key, tableau[j].value);
+        j++;
+    }
+    free(tableau);
 }
 
 // ---------------------------------------------------------------------------
