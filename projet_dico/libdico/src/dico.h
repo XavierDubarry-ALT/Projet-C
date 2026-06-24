@@ -1,3 +1,4 @@
+#include <stdint.h>
 #ifndef DICO_H
 #define DICO_H
 typedef struct dict_struct dict_t;

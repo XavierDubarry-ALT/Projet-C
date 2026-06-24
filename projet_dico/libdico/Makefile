@@ -1,18 +1,24 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror -g -fPIC
 SRC = $(wildcard src/*.c)
 OBJ = $(SRC:.c=.o)
 EXEC = bin/bench_dico
-all: $(EXEC)
+LIB = lib/libdico.so
+
+all: $(EXEC) $(LIB)
 
 $(EXEC): $(OBJ)
 	@mkdir -p bin
 	$(CC) $(OBJ) -o $@
 
+$(LIB): $(OBJ)
+	@mkdir -p lib
+	$(CC) -shared -o $@ $(OBJ)
+
 %.o: %.c 
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJ) $(EXEC)
+	rm -f $(OBJ) $(EXEC) $(LIB)
 
 .PHONY: all clean

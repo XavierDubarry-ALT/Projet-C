@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include "wc.h"
@@ -29,12 +30,12 @@ void count(FILE *f, struct Counting *pcmp, dict_t *dict)
           size_t val_len;
           dict_get_value(dict, mot, strlen(mot), (const void **)&compteur, &val_len);
           int val = *compteur + 1;
-          dict_add(dict, mot, strlen(mot), &val, sizeof(int));
+          dict_add(dict, mot, strlen(mot)+1, &val, sizeof(int));
         }
         else
         {
           int val = 1;
-          dict_add(dict, mot, strlen(mot), &val, sizeof(int));
+          dict_add(dict, mot, strlen(mot)+1, &val, sizeof(int));
         }
       }
       mot = strtok(NULL, " \t\n");
