@@ -99,14 +99,14 @@ int main(void)
     // ANALYSE RAPIDE
     // ---------------------------------------------------------
     printf("\n=== ANALYSE ===\n");
-    printf("Facteur de charge (Load Factor) : %.2f\n", (float)word_count / HASH_TABLE_DEFAULT_SIZE);
-    if ((float)word_count / HASH_TABLE_DEFAULT_SIZE > 5.0)
-    {
-        printf("ALERTE: Le facteur de charge est ÉLEVÉ.\n");
-        printf("Cela signifie beaucoup de collisions (moyenne théorique de %.0f éléments par case).\n",
-               (float)word_count / HASH_TABLE_DEFAULT_SIZE);
-        printf("C'est pour ça que la recherche est lente !\n");
-    }
+    printf("Facteur de charge (Load Factor) : %.2f\n", (float)dict_len(dico) / dict_table_len(dico));
+    float load_factor = (float)dict_len(dico) / dict_table_len(dico);
+    if (load_factor > 5.0)
+        {
+            printf("ALERTE: Le facteur de charge est ÉLEVÉ.\n");
+            printf("Cela signifie beaucoup de collisions (moyenne théorique de %.0f éléments par case).\n",load_factor);
+            printf("C'est pour ça que la recherche est lente !\n");
+        }
     printf("\nTest intensif sur une clé unique\n");
     t0 = now_us();
 

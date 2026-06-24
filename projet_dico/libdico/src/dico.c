@@ -172,6 +172,11 @@ size_t dict_len(const dict_t *dict)
     return dict->key_nb;
 }
 
+size_t dict_table_len(const dict_t *dict)
+{
+    return dict->table_len;
+}
+
 static dict_entry_t **internal_dict_find_entry_ptr(const dict_t *dict, const void *raw_key,
                                                    size_t raw_key_len, uint32_t hash)
 {
@@ -316,7 +321,6 @@ dict_status_t dict_add(dict_t *dict, void *key, size_t key_len, void *value, siz
     dict->key_nb++;
 
     if (dict_needs_resize(dict)) {
-        printf("[DEBUG] Facteur de charge > 3.0, resize nécessaire !\n");
         dict_resize(dict);
     }
 
@@ -343,7 +347,6 @@ void dict_dump(dict_t *dict)
 {
     for (size_t i = 0; i < dict->table_len; i++)
     {
-        size_t dict_length  = dict_len(dict);
         dict_entry_t *cur = dict->table[i];
         while (cur)
         {

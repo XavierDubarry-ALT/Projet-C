@@ -17,6 +17,7 @@ typedef enum {
 #define HASH_TABLE_DEFAULT_SIZE 512
 //#define HASH_TABLE_DEFAULT_SIZE 100003
 
+size_t dict_table_len(const dict_t *dict);
 
 size_t dict_len(const dict_t* dict);
 
