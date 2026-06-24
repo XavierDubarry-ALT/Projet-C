@@ -169,6 +169,11 @@ size_t dict_len(const dict_t *dict)
     return dict->key_nb;
 }
 
+size_t dict_table_len(const dict_t *dict)
+{
+    return dict->table_len;
+}
+
 static dict_entry_t **internal_dict_find_entry_ptr(const dict_t *dict, const void *raw_key,
                                                    size_t raw_key_len, uint32_t hash)
 {
