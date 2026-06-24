@@ -25,10 +25,10 @@ void count(FILE *f, struct Counting *pcmp, dict_t *dict)
 
       if (dict != NULL)
       {
-        if (dict_contains(dict, mot, strlen(mot)) == DICT_OK)
+        if (dict_contains(dict, mot, strlen(mot)+1) == DICT_OK)
         {
           size_t val_len;
-          dict_get_value(dict, mot, strlen(mot), (const void **)&compteur, &val_len);
+          dict_get_value(dict, mot, strlen(mot)+1, (const void **)&compteur, &val_len);
           int val = *compteur + 1;
           dict_add(dict, mot, strlen(mot)+1, &val, sizeof(int));
         }

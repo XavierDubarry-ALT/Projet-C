@@ -85,6 +85,13 @@ struct dict_struct
     size_t key_nb;
 };
 
+struct dict_trier
+{
+    void *raw_key;
+    void *value;
+    struct dict_trier *next;
+} dict_trier_t;
+
 // FNV-1a 32 bits
 uint32_t fnv1a_32(const void *data, size_t len)
 {
@@ -336,9 +343,12 @@ void dict_dump(dict_t *dict)
 {
     for (size_t i = 0; i < dict->table_len; i++)
     {
+        size_t dict_length  = dict_len(dict);
         dict_entry_t *cur = dict->table[i];
         while (cur)
         {
+            
+
             printf("Clé:%s, Valeur:%d \n",(char*)cur->raw_key, *(int*)cur->value);
             cur = cur->next;
         }
