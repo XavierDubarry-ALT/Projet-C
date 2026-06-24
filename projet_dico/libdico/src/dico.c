@@ -332,6 +332,19 @@ dict_status_t dict_remove_key(dict_t *dict, const void *key, size_t key_len)
     }
 }
 
+void dict_dump(dict_t *dict)
+{
+    for (size_t i = 0; i < dict->table_len; i++)
+    {
+        dict_entry_t *cur = dict->table[i];
+        while (cur)
+        {
+            printf("Clé:%s, Valeur:%d \n",(char*)cur->raw_key, *(int*)cur->value);
+            cur = cur->next;
+        }
+    }
+}
+
 // ---------------------------------------------------------------------------
 // PARTIE BENCHMARK
 // ---------------------------------------------------------------------------

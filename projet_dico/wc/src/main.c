@@ -8,6 +8,8 @@ void usage(void);
 
 int main(int argc, char *argv[])
 {
+	
+
 	struct Counting cmp = {0};
 	struct Counting *pcmp = &cmp;
 	int opt;
@@ -27,7 +29,7 @@ int main(int argc, char *argv[])
 			cmp.cflag++;
 			break;
 		case 'S':
-			//à faire
+			cmp.Sflag++;
 			break;
 		default:
 			usage();
@@ -48,7 +50,16 @@ int main(int argc, char *argv[])
 	/* Check to see if input comes from std input. */
 	if (optind >= argc)
 	{
-		count(stdin, pcmp);
+		if(cmp.Sflag)
+			{
+				dict_t *dico = dict_create();
+				count(stdin, pcmp,dico);
+				dict_dump(dico);
+				dict_destroy(dico);
+			}
+			else{
+				count(stdin, pcmp,NULL);
+			}
 		if (cmp.lflag)
 			printf(" %6ld", cmp.lcount);
 		if (cmp.wflag)
@@ -64,14 +75,24 @@ int main(int argc, char *argv[])
 	while (argv[optind])
 	{
 		FILE *f;
-
+		
 		if ((f = fopen(argv[optind], "r")) == (FILE *)NULL)
 		{
 			fprintf(stderr, "wc: cannot open %s\n", argv[optind]);
 		}
 		else
 		{
-			count(f, pcmp);
+			if(cmp.Sflag)
+			{
+				dict_t *dico = dict_create();
+				count(f, pcmp,dico);
+				dict_dump(dico);
+				dict_destroy(dico);
+			}
+			else{
+				count(f, pcmp,NULL);
+			}
+			
 			if (cmp.lflag)
 				printf(" %6ld", cmp.lcount);
 			if (cmp.wflag)

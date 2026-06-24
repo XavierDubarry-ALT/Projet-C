@@ -33,6 +33,10 @@ dict_status_t dict_add(dict_t* dict, void* key, size_t key_len, void* value, siz
 
 dict_status_t dict_remove_key(dict_t *dict, const void *key, size_t key_len);
 
+void dict_dump(dict_t *dict);
+
+dict_status_t dict_get_value(const dict_t *dict, const void *key, size_t key_len,const void **value_ptr, size_t *value_len);
+
 #endif
 
 

@@ -1,3 +1,5 @@
+#include "dico.h"
+
 struct Counting
 {
     long lcount; /* Count of lines */
@@ -11,6 +13,8 @@ struct Counting
     int lflag; /* Count lines */
     int wflag; /* Count words */
     int cflag; /* Count characters */
+
+    int Sflag;
 };
 
-void count(FILE *f, struct Counting *pcmp);
+void count(FILE *f, struct Counting *pcmp, dict_t* dict);
