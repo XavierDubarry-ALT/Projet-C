@@ -3,4 +3,4 @@ consignes/
 bench_dico
 WordCount
 VHUGO
-libdico/lib/
+libdico/lib/libdico.so
