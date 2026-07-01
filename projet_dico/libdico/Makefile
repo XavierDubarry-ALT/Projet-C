@@ -1,3 +1,4 @@
+#PROJET JULIEN FISCHER ET XAVIER DUBARRY FIPA28 ENSTA
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -g -fPIC
 SRC = $(wildcard src/*.c)

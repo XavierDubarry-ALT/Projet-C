@@ -1,3 +1,4 @@
+//PROJET JULIEN FISCHER ET XAVIER DUBARRY FIPA28 ENSTA
 /* wc - count lines, words and characters	Author: David Messer */
 #include <stdio.h>
 #include <stdlib.h>

@@ -1,3 +1,4 @@
+//PROJET JULIEN FISCHER ET XAVIER DUBARRY FIPA28 ENSTA
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>

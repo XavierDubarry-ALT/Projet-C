@@ -1,3 +1,4 @@
+//PROJET JULIEN FISCHER ET XAVIER DUBARRY FIPA28 ENSTA
 #include <stdint.h>
 #ifndef DICO_H
 #define DICO_H
